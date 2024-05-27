@@ -7,11 +7,10 @@ on:
   push:
     branches:
       - master
-  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -31,14 +30,11 @@ jobs:
           path: './target/*.jar'
 
   deploy:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
       contents: read
     needs: build
-    environment:
-      name: 'production'
-#      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
@@ -68,7 +64,6 @@ jobs:
 
       - name: Update Database
         run: |
-          
           dotnet tool install --global dotnet-ef --version 3.1
           dotnet ef database update
         env:
